@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Bettercheats™</title>
+    <style>
+        @font-face {
+            font-family: 'Heavitas.ttf';
+            src: url('Heavitas.ttf') format('TrueType');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: rgb(119, 119, 119);
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        #cart-items {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: rgb(119, 119, 119);
+            border-bottom: 2px solid white; /* Add a white border */
+            font-family: 'Heavitas.ttf';
+        }
+
+        .product-image {
+            width: 100px; /* Set to twice the original size */
+            height: auto;
+            margin-right: 10px;
+        }
+
+        #total {
+            font-weight: bold;
+        }
+
+        .action-button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            font-family: 'Heavitas.ttf';
+        }
+
+        #checkout-button:hover,
+        .action-button:hover {
+            background-color: #555;
+        }
+
+        #back-button {
+            background-color: #3bb197;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #back-button:hover {
+            background-color: #4de4d7;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-details p {
+            margin: 0;
+        }
+
+        button {
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: 1px solid rgb(78, 233, 207);
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: transparent;
+  color: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  margin-left: 20px;
+}
+
+button:hover {
+  background: rgb(78, 233, 207);
+  box-shadow: 0 0 30px 5px rgb(78, 233, 207);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+button:hover::before {
+  -webkit-animation: sh02 0.5s 0s linear;
+  -moz-animation: sh02 0.5s 0s linear;
+  animation: sh02 0.5s 0s linear;
+}
+
+button::before {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: #fff;
+  box-shadow: 0 0 50px 30px #fff;
+  -webkit-transform: skewX(-20deg);
+  -moz-transform: skewX(-20deg);
+  -ms-transform: skewX(-20deg);
+  -o-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+}
+
+@keyframes sh02 {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+
+button:active {
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: box-shadow 0.2s ease-in;
+  -moz-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
+}
+
+        
+    </style>
+</head>
+<body>
+    <header>
+        <button id="back-button" onclick="goToIndex()">Back</button>
+        <h1>Shopping Cart</h1>
+    </header>
+
+
+
+
+
+
+
+    <div id="cart-items">
+        <!-- JavaScript code to retrieve and display shopping cart items -->
+    </div>
+
+    <div id="total">
+        <p>Total: $00.00</p>
+    </div>
+
+    <form id="checkout-form">
+        <button class="action-button" type="button" onclick="checkout()">Checkout</button>
+    </form>
+
+    <script>
+        function goToIndex() {
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            displayCartItems();
+        });
+
+        function displayCartItems() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById('cart-items');
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.className = 'cart-item';
+                cartItemDiv.innerHTML = `
+                    <img class="product-image" src="${item.productImage || 'aimbot.png'}" alt="Product Image">
+                    <div class="product-details">
+                        <p>Product Name: ${item.productName}</p>
+                        <p>Price: $${item.price.toFixed(2)}</p>
+                    </div>
+                    <button class="action-button" onclick="removeFromCart('${item.productName}', ${item.price})">Remove</button>
+                `;
+                cartItemsContainer.appendChild(cartItemDiv);
+                total += item.price;
+
+                // Add a white separator line after the first and second products
+                if (index === 0 || index === 1) {
+                    cartItemDiv.style.borderBottom = '2px solid white';
+                }
+            });
+
+            document.getElementById('total').innerHTML = `<p>Total: $${total.toFixed(2)}</p>`;
+        }
+
+        function removeFromCart(productName, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.productName !== productName);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            location.reload();
+        }
+
+        function checkout() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const fivemInternalInCart = cart.some(item => item.productName === 'Fivem Internal');
+
+            if (fivemInternalInCart) {
+                // Open the specified link for Fivem Internal
+                window.location.href = 'https://cdn.discordapp.com/attachments/1179151820447293522/1189337441539199137/BetterMenu.rar?ex=659dcbce&is=658b56ce&hm=345442cb3635979bc30585cae7a07389944b00fc9e9d1b5cf195840e6c4da479&';
+            } else {
+                // Your existing checkout logic here
+                alert('Checkout completed for other products.');
+            }
+        }
+    </script>
+</body>
+</html>
