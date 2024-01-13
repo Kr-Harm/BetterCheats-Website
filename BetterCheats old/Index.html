@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetterCheats</title>
+  <style>
+    @font-face {
+      font-family: 'BlackFuture';
+      src: url('BlackFuture.otf') format('opentype'); 
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; 
+      overflow: hidden;
+      cursor: none; 
+      transition: background-color 0.5s ease;
+      font-family: 'BlackFuture', sans-serif; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    #content {
+      font-family: 'BlackFuture', sans-serif; 
+      text-align: center;
+      position: relative;
+    }
+
+    #logo {
+      position: absolute;
+      top: 10px; 
+      left: 10px; 
+      width: 100px;
+      height: auto; 
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 15px; 
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    #discord-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px;
+      background-color: #72ceda; 
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      text-decoration: none;
+      color: #fff;
+      align-items: center;
+    }
+
+    #discord-logo {
+      width: 40px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    video {
+      width: 30%;
+      height: auto; 
+      border-radius: 15px; 
+    }
+
+    #controls-container {
+      position: absolute;
+      bottom: -5%; 
+      left: 50%;   
+      transform: translate(-50%, 50%); 
+      width: 30%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 5px;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    #play-pause-btn {
+      cursor: pointer;
+      color: #fff;
+      font-size: 18px;
+      margin: 0 10px;
+    }
+
+    #progress-bar {
+      flex: 1;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #555;
+      margin: 0 10px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    #progress-bar-inner {
+      height: 100%;
+      border-radius: 5px;
+      background-color: #72ceda;
+      width: 0;
+    }
+    body:hover #overlay {
+      background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.068), rgba(0, 0, 0, 0.2));
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay"></div>
+
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+
+  <div id="content">
+    <h1>BetterCheats</h1>
+    <!-- Video einbetten -->
+    <video id="videoPlayer" volume="0.1" tabindex="0">
+      <source src="Showcase.mp4" type="video/mp4">
+      Dein Browser unterstützt das Videoformat nicht.
+    </video>
+
+    <!-- Controls Container -->
+    <div id="controls-container">
+      <div id="play-pause-btn">Play</div>
+      <div id="progress-bar">
+        <div id="progress-bar-inner"></div>
+      </div>
+    </div>
+  </div>
+
+  <img id="logo" src="img/noBG.png" alt="Logo">
+
+  <!-- Discord-Button -->
+  <a id="discord-button" href="https://discord.gg/VXmg7MXrzq" target="_blank" rel="noopener noreferrer">
+    <img id="discord-logo" src="Discord.png" alt="Discord Logo">
+    Discord
+  </a>
+
+  <footer>
+    &copy; 2023 BetterCheats
+  </footer>
+
+  <script>
+    const body = document.body;
+    const video = document.getElementById('videoPlayer');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const progressBarInner = document.getElementById('progress-bar-inner');
+
+    body.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX / window.innerWidth * 100;
+      const mouseY = e.clientY / window.innerHeight * 100;
+
+      document.getElementById('overlay').style.background = `radial-gradient(circle at ${mouseX}% ${mouseY}%, rgba(0, 255, 255, 0.068), rgba(255, 0, 0, 0))`;
+    });
+
+    body.addEventListener('mouseenter', () => {
+      body.style.cursor = `url('pointer.png') 10 10, auto`;
+    });
+
+    body.addEventListener('mouseleave', () => {
+      body.style.cursor = 'none';
+    });
+
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    video.addEventListener('click', togglePlayPause);
+    progressBar.addEventListener('click', seek);
+    video.addEventListener('timeupdate', updateProgressBar);
+    body.addEventListener('keydown', handleKeyPress);
+
+    function togglePlayPause() {
+      if (video.paused) {
+        video.play();
+        playPauseBtn.textContent = 'Pause';
+      } else {
+        video.pause();
+        playPauseBtn.textContent = 'Play';
+      }
+    }
+
+    function updateProgressBar() {
+      const percent = (video.currentTime / video.duration) * 100;
+      progressBarInner.style.width = percent + '%';
+    }
+
+    function seek(e) {
+      const percent = (e.clientX / progressBar.clientWidth) * 100;
+      const newTime = (percent / 100) * video.duration;
+      video.currentTime = newTime;
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === ' ') {
+        e.preventDefault();
+        togglePlayPause();
+      }
+    }
+  </script>
+</body>
+</html>
